@@ -1,0 +1,682 @@
+/* 应用主容器 */
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* 头部样式 */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 10px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* 主内容区域 */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  transition: all 0.6s ease-in-out;
+  position: relative;
+  width: 100%;
+}
+
+/* 上半部分：简历预览和分析结果 */
+.top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.main-content.analyzing .top-section,
+.main-content.completed .top-section {
+  flex-direction: row;
+  gap: 40px;
+}
+
+.pdf-section {
+  width: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.main-content.analyzing .pdf-section,
+.main-content.completed .pdf-section {
+  width: 50%;
+}
+
+/* 下半部分：目标岗位 */
+.bottom-section {
+  width: 100%;
+}
+
+.input-section {
+  width: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+/* PDF上传区域 */
+.upload-section {
+  margin-bottom: 30px;
+}
+
+.upload-area {
+  background: white;
+  border: 3px dashed #ddd;
+  border-radius: 20px;
+  padding: 60px 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-area:hover {
+  border-color: #667eea;
+  background: #f8f9ff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+}
+
+.upload-area.drag-over {
+  border-color: #667eea;
+  background: #f0f4ff;
+  transform: scale(1.02);
+}
+
+.upload-area.has-file {
+  border-color: #4caf50;
+  background: #f8fff8;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-icon {
+  font-size: 4rem;
+  color: #ddd;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover .upload-icon {
+  color: #667eea;
+  transform: scale(1.1);
+}
+
+.upload-main-text {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.upload-sub-text {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* 文件预览样式 */
+.file-preview {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.pdf-preview-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 300px;
+}
+
+.pdf-viewer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.pdf-viewer .react-pdf__Document {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pdf-viewer .react-pdf__Page {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.pdf-viewer .react-pdf__Page canvas {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+}
+
+.pdf-loading,
+.pdf-error,
+.page-loading {
+  padding: 40px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+.pdf-error {
+  color: #ff6b6b;
+}
+
+.pdf-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.pdf-nav-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.pdf-nav-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.pdf-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-info {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 60px;
+  text-align: center;
+}
+
+.file-icon {
+  font-size: 3rem;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 8px 8px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  backdrop-filter: blur(5px);
+}
+
+.file-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+  color: #fff;
+}
+
+.file-size {
+  font-size: 14px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.change-file-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.change-file-btn:hover {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+.change-file-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.change-file-btn:disabled:hover {
+  background: #ccc;
+  transform: none;
+}
+
+/* 职位信息输入区域 */
+.job-info-section {
+  margin-bottom: 30px;
+}
+
+.job-info-container {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.job-input, .job-select {
+  flex: 1;
+  min-width: 200px;
+  padding: 15px 20px;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.job-input:focus, .job-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.job-input:disabled, .job-select:disabled {
+  background: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  border-color: #ddd;
+}
+
+.upload-area.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.separator {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #667eea;
+}
+
+/* 分析按钮 */
+.analyze-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.analyze-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 18px 50px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.analyze-btn.enabled:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.analyze-btn.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.analyze-btn.analyzing {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: auto;
+  min-width: 200px;
+}
+
+.loading-waves {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.wave {
+  width: 3px;
+  height: 20px;
+  background: white;
+  border-radius: 2px;
+  animation: waveAnimation 1.2s ease-in-out infinite;
+}
+
+.wave:nth-child(1) { animation-delay: 0s; }
+.wave:nth-child(2) { animation-delay: 0.1s; }
+.wave:nth-child(3) { animation-delay: 0.2s; }
+.wave:nth-child(4) { animation-delay: 0.3s; }
+.wave:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes waveAnimation {
+  0%, 100% {
+    height: 8px;
+    opacity: 0.4;
+  }
+  50% {
+    height: 20px;
+    opacity: 1;
+  }
+}
+
+/* 分析完成状态按钮 */
+.completed-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.detail-btn {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  padding: 18px 40px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+}
+
+.detail-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+}
+
+.return-btn {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  color: white;
+  border: none;
+  padding: 18px 40px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+}
+
+.return-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(108, 117, 125, 0.4);
+}
+
+/* 分析结果区域 */
+.results-section {
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.6s ease-in-out;
+}
+
+.main-content.analyzing .results-section {
+  width: 50%;
+  opacity: 1;
+  overflow: visible;
+}
+
+.results-container {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  height: 95%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.results-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.analysis-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 分析项样式 */
+.analysis-item {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  border-left: 5px solid #e9ecef;
+}
+
+.analysis-item.analyzing {
+  border-left-color: #667eea;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+}
+
+.analysis-item.completed {
+  border-left-color: #4caf50;
+  background: linear-gradient(135deg, #f8fff8 0%, #f0fff0 100%);
+  animation: completePulse 0.6s ease-out;
+}
+
+.analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.analysis-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.analysis-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.analysis-status span {
+  color: #666;
+}
+
+.analysis-item.analyzing .analysis-status span {
+  color: #667eea;
+}
+
+.analysis-item.completed .analysis-status span {
+  color: #4caf50;
+}
+
+/* 加载动画 */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.success-icon {
+  width: 20px;
+  height: 20px;
+  background: #4caf50;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* 移除分析结果显示相关样式，保持模块大小一致 */
+
+/* 动画定义 */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes completePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .main-content {
+    flex-direction: column;
+  }
+  
+  .main-content.analyzing .input-section,
+  .main-content.completed .input-section {
+    transform: none;
+    width: 100%;
+  }
+  
+  .main-content.analyzing .results-section,
+  .main-content.completed .results-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .input-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .separator {
+    display: none;
+  }
+  
+  .upload-area {
+    padding: 40px 20px;
+  }
+  
+  .job-info-container {
+    padding: 25px;
+  }
+  
+  .results-container {
+    padding: 20px;
+  }
+}

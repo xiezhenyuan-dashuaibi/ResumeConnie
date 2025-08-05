@@ -1,0 +1,1780 @@
+/* 复用 page-wrapper 和 main-container 样式，与 AnalysisDetails 一致 */
+.page-wrapper {
+  height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; 
+}
+
+.card-stack {
+  position: relative;
+  width: 100%;
+  max-width: 1000px; /* 略小 */
+  height: 65vh;
+  perspective: 1000px;
+}
+
+/* 固定的背景卡片样式 */
+.background-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f1f5f9;
+  border-radius: 12px;
+  pointer-events: none; /* 不可交互 */
+}
+
+.background-card-1 {
+  z-index: 1;
+  transform: translate(10px, 10px) scale(1);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25), 0 6px 15px rgba(0, 0, 0, 0.15);
+  opacity: 1; /* 第一张背景卡片稍微透明 */
+}
+
+.background-card-2 {
+  z-index: 2;
+  transform: translate(-4px, 14px) scale(1);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.2);
+  opacity: 0.95; /* 第二张背景卡片更透明 */
+}
+
+.background-card-3 {
+  z-index: 3;
+  transform: translate(-8px, -8px) scale(1);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35), 0 10px 25px rgba(0, 0, 0, 0.25);
+  opacity: 0.8; /* 第三张背景卡片最透明 */
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f1f5f9;
+  border-radius: 12px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2), 0 8px 20px rgba(0, 0, 0, 0.1); /* 增强主卡片阴影 */
+  padding: 30px;
+  transition: none; /* 移除默认过渡，使用动画 */
+  opacity: 1;
+  font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+  overflow-y: auto;
+}
+
+/* 活跃（顶部）卡片 */
+.card.active {
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  opacity: 1;
+  z-index: 10;
+}
+
+/* 已抽离卡片：向右下方弧形撤离并旋转淡出 */
+.card.removed {
+  animation: cardExitBottomRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  pointer-events: none; /* 不可交互 */
+  z-index: 5;
+}
+
+/* 堆叠下方卡片：模糊和偏移 */
+.card.stacked {
+  pointer-events: none; /* 下方不可交互 */
+}
+
+/* 向右下方弧形撤离动画 */
+@keyframes cardExitBottomRight {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  30% {
+    transform: translate(50px, 40px) rotate(8deg) scale(0.95);
+    opacity: 0.8;
+  }
+  60% {
+    transform: translate(280px, 200px) rotate(18deg) scale(0.85);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(450px, 350px) rotate(25deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* 为不同设备优化动画距离 */
+@media (max-width: 768px) {
+  @keyframes cardExitBottomRight {
+    0% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+      opacity: 1;
+    }
+    30% {
+      transform: translate(30px, 20px) rotate(8deg) scale(0.95);
+      opacity: 0.8;
+    }
+    60% {
+      transform: translate(180px, 150px) rotate(18deg) scale(0.85);
+      opacity: 0.4;
+    }
+    100% {
+      transform: translate(280px, 250px) rotate(25deg) scale(0.7);
+      opacity: 0;
+    }
+  }
+}
+
+button {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #f1f5f9;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: transparent;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+  
+}
+
+.details-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 30px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 15px 15px 0 15px;
+}
+
+.back-link {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.back-link:hover {
+  background-color: #e9ecef;
+}
+
+.editor-content {
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 15px;
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+
+/* 第一张卡片的内容样式 */
+.first-card-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 垂直居中 */
+  align-items: center; /* 水平居中 */
+  gap: 30px; /* 增加间距 */
+  padding: 40px; /* 增加内边距 */
+  text-align: center; /* 文本居中 */
+}
+
+.first-card-content h2 {
+  color: #2c3e50;
+  margin-bottom: 0; /* 移除底部边距，使用gap控制 */
+  font-size: 26px; /* 稍微增大字体 */
+  font-weight: 600;
+}
+
+.setting-group {
+  width: 100%;
+  max-width: 700px; /* 从500px增加到700px */
+  margin-bottom: 0;
+}
+
+.setting-group h3 {
+  color: #34495e;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.option-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 6px 4px; 
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e9ecef;
+  min-width: 600px;
+}
+
+.option-btn {
+  padding: 12px 32px;
+  border: 2px solid #e0e6ed;
+  background: #ffffff; /* 白色背景 */
+  color: #495057;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 15px;
+  font-weight: 500;
+  min-width: 220px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 轻微外阴影 */
+}
+
+.option-btn:hover {
+  border-color: #667eea;
+  background: #f0f2ff;
+  transform: translateY(-1px); /* 轻微上移 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* 增强阴影 */
+}
+
+.option-btn.active {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #f1f5f9;
+  transform: translateY(-4px); /* 明显凸出效果 */
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4), 0 4px 10px rgba(102, 126, 234, 0.2); /* 强烈的凸出阴影 */
+  z-index: 1; /* 确保在其他按钮之上 */
+  position: relative; /* 为z-index生效 */
+}
+
+.card-actions {
+  margin-top: 0; /* 移除顶部边距，使用gap控制 */
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.next-btn {
+  padding: 15px 50px; /* 增加左右内边距，从40px增加到50px */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #f1f5f9;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 17px;
+  font-weight: 600;
+  min-width: 160px; /* 增加最小宽度，从140px增加到160px */
+}
+
+.next-btn:hover {
+  transform: translateY(-3px); /* 增加悬停效果 */
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5); /* 增强阴影 */
+}
+
+/* 其他卡片的内容样式 */
+.other-card-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  
+}
+
+.other-card-content h2 {
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.other-card-content p {
+  color: #6c757d;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
+/* 在现有样式后添加 */
+
+.option-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 120%; /* 在按钮上方显示 */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: tooltipFadeIn 0.2s ease-in-out;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+
+/* 加载卡片样式 */
+.loading-card-content {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-animation {
+  margin: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-description {
+  color: #666;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+/* 第三张卡片（结果展示）样式 */
+.result-card-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.result-header h2 {
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* 第三张卡片样式调整 */
+.result-main-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative; /* 为浮动按钮定位 */
+}
+
+.light-panel {
+  flex: 1;
+  background: #f0f4ff; /* 浅色背景 */
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.panel-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+.preview-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 70%; /* 缩小宽度到70% */
+  max-width: 600px; /* 设置最大宽度 */
+  margin: 0 auto; /* 居中显示 */
+  height: 80%; /* 占满可用高度 */
+  padding: 10px;
+  box-sizing: border-box;
+  
+}
+
+
+/* 原项目经历区域调整 */
+.original-section {
+ height: 20%;
+}
+
+/* 修改建议区域调整 */
+.suggestion-section {
+ height: 100%;
+ justify-content: flex-start;
+
+ overflow-y: auto;
+}
+
+
+/* 右侧确认按钮 */
+.result-right-section {
+  width: 150px; /* 缩小宽度 */
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 20px;
+  position: relative;
+  right: -50px;  
+  top: -12px;  
+}
+
+
+
+
+
+.result-left-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 0;
+}
+
+
+
+/* 导航控制 */
+.navigation-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.nav-btn {
+  width: 70px; /* 从40px增加到50px */
+  height: 70px; /* 从40px增加到50px */
+  border: 2px solid #9ca3af; /* 灰色边框 */
+  background: #f3f4f6; /* 浅灰色背景 */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px; /* 稍微增大图标尺寸 */
+  color: #6b7280; /* 灰色图标 */
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 添加轻微阴影 */
+}
+
+.nav-btn:hover:not(:disabled) {
+  border-color: #4b5563; /* 悬停时深灰色边框 */
+  background: #e5e7eb; /* 悬停时稍深的灰色背景 */
+  color: #374151; /* 悬停时深灰色图标 */
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 悬停时增强阴影 */
+}
+
+.nav-btn:disabled {
+  opacity: 0.4; /* 禁用时更透明 */
+  cursor: not-allowed;
+  background: #f9fafb; /* 禁用时更浅的背景 */
+  border-color: #d1d5db; /* 禁用时浅灰色边框 */
+  color: #9ca3af; /* 禁用时浅灰色图标 */
+}
+
+.index-marker {
+  position: absolute;
+  top: 45px;
+  left: 50px;
+  background: #6c5ce7;
+  color: #f1f5f9;
+  padding: 10px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  min-width: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.row-indicator {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* 内容展示区域 */
+.content-display-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0;
+}
+
+
+/* 去掉内容区域的边框，统一青灰色配色 */
+.content-box {
+  flex: 1;
+  background: #f1f5f9; /* 统一青灰色背景 */
+  border: none; /* 去掉边框 */
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #64748b; /* 青灰色文字 */
+  overflow-y: auto;
+  min-height: 100px;
+}
+
+.original-content {
+  border-left: none; /* 去掉左边框 */
+}
+
+.suggestion-content {
+  border-left: none; /* 去掉左边框 */
+}
+
+/* 统一内容区域背景色 */
+.content-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+
+  background: #f1f5f9; /* 统一青灰色背景 */
+}
+
+.content-section h3 {
+  color: #475569; /* 青灰色标题 */
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+/* 导航控制区域统一配色 */
+.navigation-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  background: #f1f5f9; /* 统一青灰色背景 */
+}
+
+
+
+.row-indicator {
+  font-size: 14px;
+  color: #64748b; /* 青灰色文字 */
+  font-weight: 500;
+  min-width: 60px;
+  text-align: center;
+}
+
+
+.send-btn {
+  padding: 10px 20px;
+  background: #64748b; /* 青灰色背景 */
+  color: #f1f5f9;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.send-btn:hover {
+  background: #475569; /* 悬停时稍深的青灰色 */
+}
+
+.confirm-btn {
+  width: 90%;
+  height: 100%;
+  background: linear-gradient(135deg, #8f5ac4, #8b92d0);
+  color: white;
+  border: none;
+  border-radius: 16px; /* 添加圆角 */
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(139, 124, 246, 0.4), 0 4px 12px rgba(139, 124, 246, 0.2); /* 增强阴影效果 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  position: relative;
+  overflow: hidden; /* 为反光动效做准备 */
+}
+
+/* 反光动效的伪元素 */
+.confirm-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+  z-index: 1;
+}
+
+/* 鼠标悬停效果 */
+.confirm-btn:hover {
+  transform: translateY(-3px); /* 轻微上移 */
+  box-shadow: 0 12px 35px rgba(139, 124, 246, 0.5), 0 6px 20px rgba(139, 124, 246, 0.3); /* 增强阴影 */
+  background: linear-gradient(135deg, #a48dd2, #83419b); /* 稍微加深颜色 */
+}
+
+/* 鼠标悬停时触发反光动效 */
+.confirm-btn:hover::before {
+  left: 100%; /* 反光从左到右划过 */
+}
+
+/* 确保按钮文字在反光之上 */
+.confirm-btn span {
+  position: relative;
+  z-index: 2;
+}
+
+/* 无数据提示 */
+.no-data-message {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 16px;
+}
+/* 新的布局样式 - 添加到文件末尾 */
+
+/* 主要布局容器 */
+.main-layout {
+  display: flex;
+  background: #f1f5f9;
+  height: 110%;
+  width: 100%;
+
+  padding: 0px 10px; 
+  margin: 0; /* 去掉所有外边距 */
+  
+}
+
+/* 确保结果卡片容器也没有边距 */
+.result-card-container {
+  width: 100%;
+  height: 100%;
+  padding: 0; /* 去掉内边距 */
+  margin: 0; /* 去掉外边距 */
+  box-sizing: border-box;
+  
+}
+
+/* 左侧内容容器调整 - 去掉边框，统一青灰色，铺满边界 */
+.left-content-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  background: #f1f5f9;
+  border-radius: 0; /* 去掉圆角，让它贴合卡片边缘 */
+  overflow: hidden;
+  border: none;
+  margin: 10px 20px; 
+  padding: 0px 0px; /* 添加内边距，进一步挤压内部组件 */
+  box-sizing: border-box; /* 确保边距计算正确 */
+}
+
+/* 右侧按钮容器 - 调整边距 */
+.right-button-container {
+  width: 150px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0; /* 去掉内边距 */
+  margin: 0; /* 去掉外边距 */
+}
+
+
+
+/* 标题区域调整 - 使用百分比高度 */
+.title-section {
+  flex-shrink: 0;
+  height: 15%; /* 设置为15%的高度 */
+  padding: 15px 20px;
+  border-bottom: none;
+  background: #f1f5f9;
+  margin: 0;
+  display: flex;
+  align-items: flex-start; /* 改为顶部对齐 */
+  justify-content: center; /* 添加水平居中 */
+  box-sizing: border-box;
+}
+
+/* 预览区域调整 - 使用百分比高度 */
+.preview-section {
+  height: 80%; /* 设置为70%的高度，作为主要内容区域 */
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  position: relative;
+  background: #f1f5f9;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 对话区域调整 - 增加高度和美化样式 */
+.chat-section {
+  position: fixed;
+  flex-shrink: 0;
+  height: 0%; /* 从15%增加到20% */
+  width: 65%;
+  top: 80%; /* 距离顶部20px */
+  left: 10%; 
+  padding: 0px;
+  border-top: none;
+  background: #f1f5f9;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* 对话输入区域容器美化 */
+.chat-input-area {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+  background: #ffffff;
+  padding: 5px 5px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 0px solid #e2e8f0; /* 从1px改为0.5px，使边框更细 */
+  transition: all 0.3s ease;
+  margin-top: 50px; /* 添加顶部边距，使对话框位置下移 */
+}
+
+.chat-input-area:hover {
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12), 0 3px 12px rgba(0, 0, 0, 0.06); /* 悬停时增强阴影 */
+  border-color: #cbd5e1;
+}
+
+/* 对话输入框美化 - 增加长度和高度 */
+.chat-input {
+  flex: 1;
+  padding: 15px 20px;
+  border: 0.5px solid #e2e8f0; /* 从1px改为0.5px，使边框更细 */
+  border-radius: 15px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  background: #f8fafc;
+  color: #475569;
+  min-height: 50px;
+  resize: none;
+}
+
+.chat-input:focus {
+  border-color: #8b5cf6; /* 聚焦时紫色边框 */
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1); /* 从3px改为2px，使聚焦边框更细 */
+  transform: translateY(-1px);
+}
+
+.chat-input::placeholder {
+  color: #94a3b8;
+  font-style: italic;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0.7;
+}
+
+/* 发送按钮动态美化 */
+.send-btn {
+  padding: 15px 25px; /* 增加按钮尺寸 */
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed); /* 渐变背景 */
+  color: #ffffff;
+  border: none;
+  border-radius: 15px; /* 增加圆角 */
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); /* 添加阴影 */
+  position: relative;
+  overflow: hidden;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 发送按钮悬停效果 */
+.send-btn:hover {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9); /* 悬停时加深 */
+  transform: translateY(-2px) scale(1.05); /* 上移并轻微放大 */
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4), 0 4px 12px rgba(139, 92, 246, 0.2); /* 增强阴影 */
+}
+
+/* 发送按钮点击效果 */
+.send-btn:active {
+  transform: translateY(0) scale(0.98); /* 点击时轻微缩小 */
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+/* 发送按钮反光动效 */
+.send-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+  z-index: 1;
+}
+
+.send-btn:hover::before {
+  left: 100%; /* 悬停时反光从左到右划过 */
+}
+
+/* 确保按钮文字在反光之上 */
+.send-btn span {
+  position: relative;
+  z-index: 2;
+}
+
+/* 发送按钮加载状态（可选） */
+.send-btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.send-btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
+    height: 100%; /* 移动端也使用百分比高度 */
+    min-height: 400px; /* 设置最小高度避免过小 */
+    padding: 0;
+    gap: 0;
+  }
+  
+  .right-button-container {
+    width: 100%;
+    height: 60px;
+    padding: 0;
+  }
+  
+  .confirm-btn {
+    font-size: 14px;
+    border-radius: 0;
+  }
+  
+  .left-content-container {
+    border-radius: 0;
+  }
+    .chat-section {
+    height: 25%; /* 移动端增加更多高度 */
+    padding: 15px;
+  }
+  
+
+  .chat-input {
+    padding: 12px 15px;
+    font-size: 14px;
+    min-height: 45px;
+  }
+  
+  .send-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    min-width: 70px;
+  }
+
+}
+.ai-thinking-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(111, 85, 167, 0.1); /* 半透明白色背景 */
+  backdrop-filter: blur(4px); /* 毛玻璃效果 */
+  -webkit-backdrop-filter: blur(4px); /* Safari兼容 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.ai-thinking-modal {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  min-width: 300px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.thinking-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.thinking-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: thinking-spin 1s linear infinite;
+}
+
+@keyframes thinking-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.thinking-animation p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+
+
+/* 禁用状态的按钮样式 */
+.nav-btn:disabled,
+.send-btn:disabled,
+.confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.chat-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+}
+
+.generic-card-content {
+  margin: -30px -30px -30px -30px;
+  height: 572px;
+  display: block;
+  flex-direction: column;
+  overflow: hidden; 
+  overflow-y: hidden;
+  overflow-x: hidden;
+  overscroll-behavior: none; /* 防止滚动链 */
+  touch-action: none; /* 移动端禁用触摸滚动 */
+
+}
+
+
+
+/* 三列布局样式 */
+.three-column-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: none; /* 防止滚动链 */
+  touch-action: none; /* 移动端禁用触摸滚动 */
+
+
+}
+
+/* 左侧容器  */
+.left-container {
+  flex: 3;
+  height: 100%;
+  background: linear-gradient(135deg, #2068b4 0%, #167ac7 20%, #0f61a8 100%); /* 修改：加深蓝色背景 */
+  border: none;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(233, 30, 99, 0.3);
+  border-radius: 12px 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: none; /* 防止滚动链 */
+  touch-action: none; /* 移动端禁用触摸滚动 */
+}
+
+
+
+/* 中间容器  */
+.center-container {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: none; /* 防止滚动链 */
+  touch-action: none; /* 移动端禁用触摸滚动 */
+  margin-top: -125px; /* 向上偏移50px */
+}
+
+/* 可编辑文本区域样式 */
+.editable-text-area {
+  margin-top: 5px;
+  width: 400px;
+  height: 400px; /* 固定高度 */
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  border: none; /* 无边框 */
+  background: transparent; /* 透明背景 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 边界阴影 */
+  padding: 12px;
+  box-sizing: border-box;
+  overflow-y: auto; /* 垂直滚动 */
+  overflow-x: hidden; /* 禁止水平滚动 */
+  word-wrap: break-word; /* 文字换行 */
+
+  line-height: 1.5; /* 设置行高 */
+}
+
+.editable-text-area::placeholder {
+  color: #ccc;
+  font-style: italic;
+
+}
+
+
+/* ReactMarkdown 预览区域样式（预览模式）*/
+.markdown-preview-area {
+  margin-top: 5px;
+  width: 400px;
+  height: 400px; /* 固定高度 */
+  font-size: 14px;
+  font-family: inherit;
+  border: none;
+  background: transparent;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+
+  white-space: pre-wrap; /* 保留换行符和空格 */
+  word-wrap: break-word;
+}
+
+.markdown-preview-area:hover {
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 占位符文本样式 */
+.placeholder-text {
+  color: #ccc;
+  font-style: italic;
+  text-align: center;
+  display: block;
+  width: 100%;
+  margin-top: 0; /* 移除额外的 margin，因为容器已经垂直居中 */
+}
+
+/* ReactMarkdown 渲染样式优化 - 所有元素都居中 */
+.markdown-preview-area h1 {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 16px 0 12px 0;
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 8px;
+
+}
+
+.markdown-preview-area h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 14px 0 10px 0;
+  color: #444;
+
+}
+
+.markdown-preview-area h3 {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 12px 0 8px 0;
+  color: #555;
+
+}
+
+.markdown-preview-area p {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.markdown-preview-area strong {
+  font-weight: bold;
+  color: #333;
+}
+
+.markdown-preview-area em {
+  font-style: italic;
+  color: #666;
+}
+
+.markdown-preview-area code {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #3ee49f;
+}
+
+.markdown-preview-area pre {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.markdown-preview-area pre code {
+  background: none;
+  padding: 0;
+  color: #333;
+}
+
+.markdown-preview-area ul, .markdown-preview-area ol {
+  margin: 8px 0;
+  padding-left: 0; /* 移除左边距 */
+  list-style-position: inside; /* 列表标记在内部 */
+
+}
+
+.markdown-preview-area li {
+  margin: 4px 0;
+
+}
+
+.markdown-preview-area blockquote {
+  border-left: 4px solid #ddd;
+  margin: 12px auto; /* 水平居中 */
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.02);
+  font-style: italic;
+  color: #666;
+
+  max-width: 80%; /* 限制宽度以便居中显示 */
+}
+
+.markdown-preview-area a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.markdown-preview-area a:hover {
+  text-decoration: underline;
+}
+
+
+/* 右侧容器  */
+.right-container {
+  flex: 3;
+  height: 100%;
+  background: linear-gradient(135deg, #2167b1 0%, #127cbe 30%, #1167b1 80%, #4585ba 100%); /* 修改：加深蓝色背景 */
+  border: none;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(233, 30, 99, 0.3);
+  border-radius: 12px 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: none; /* 防止滚动链 */
+  touch-action: none; /* 移动端禁用触摸滚动 */
+}
+
+/* 容器标题样式 */
+.left-container h3,
+.center-container h3,
+.right-container h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* 容器标题样式 */
+.left-container h3,
+.right-container h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px; /* 修改：从16px增大到18px */
+  font-weight: bold;
+  color: white; /* 新增：白色字体 */
+}
+
+/* 左右文本显示容器样式 */
+.text-display-container {
+  width: 100%;
+  height: 450px;
+  border: none;
+  background: transparent;
+  padding: 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 15px; /* 修改：从14px增大到16px */
+  font-family: inherit;
+  color: #f1f5f9; /* 修改：改为白色字体 */
+}
+
+/* 左侧文本容器特定样式 */
+.left-text-container {
+  text-align: left;
+}
+
+/* 右侧文本容器特定样式 */
+.right-text-container {
+  text-align: left;
+}
+
+/* 文本显示容器内的 Markdown 样式 */
+.text-display-container h1 {
+  font-size: 1.7em; /* 修改：从1.6em增大到1.8em */
+  font-weight: bold;
+  margin: 12px 0 8px 0;
+  color: #f1f5f9; /* 修改：改为白色 */
+}
+
+.text-display-container h2 {
+  font-size: 1.5em; /* 修改：从1.4em增大到1.6em */
+  font-weight: bold;
+  margin: 10px 0 6px 0;
+  color: #f1f5f9; /* 修改：改为浅白色 */
+}
+
+.text-display-container h3 {
+  font-size: 1.3em; /* 修改：从1.2em增大到1.4em */
+  font-weight: bold;
+  margin: 8px 0 4px 0;
+  color: #f1f5f9; /* 修改：改为浅白色 */
+}
+
+.text-display-container p {
+  margin: 6px 0;
+  line-height: 1.6;
+  color: #f1f5f9; /* 新增：白色字体 */
+}
+
+.text-display-container strong {
+  font-weight: bold;
+  color: #f1f5f9; /* 修改：改为亮白色 */
+}
+
+.text-display-container em {
+  font-style: italic;
+  color: #f1f5f9; /* 新增：浅白色 */
+}
+
+.text-display-container code {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #36ecd7;
+}
+
+.text-display-container pre {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.text-display-container pre code {
+  background: none;
+  padding: 0;
+  color: #66e3e3;
+}
+
+.text-display-container ul, .text-display-container ol {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+
+.text-display-container li {
+  margin: 2px 0;
+}
+
+.text-display-container blockquote {
+  border-left: 3px solid #ddd;
+  margin: 8px 0;
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.02);
+  font-style: italic;
+  color: #666;
+}
+
+.text-display-container a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.text-display-container a:hover {
+  text-decoration: underline;
+}
+
+.center-container {
+  position: relative;
+}
+
+.edit-hint {
+  font-size: 12px;
+  color: #a68e8edd ;
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 5px;
+  font-style: italic;
+  z-index: 10;
+}
+
+/* 文字渐显动画 - 调整动画时间 */
+.fadeInText {
+  animation: fadeInText 0.6s ease-in-out;
+}
+
+.fadeOutText {
+  animation: fadeOutText 0.6s ease-in-out;
+}
+
+@keyframes fadeInText {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutText {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* 为文本容器添加过渡效果 */
+.left-text-container,
+.right-text-container,
+.markdown-preview-area,
+.editable-text-area {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 透明标题容器样式 */
+.center-header-transparent {
+  display: flex;
+  align-items: center;
+
+  margin-top: 70px;
+  background: transparent; /* 透明背景 */
+  border: none; /* 无边框 */
+  position: relative;
+}
+
+/* 复用第三张卡片的marker样式 */
+.center-header-transparent .index-marker {
+  position: absolute; /* 设置为绝对定位 */
+  top: 0px; /* 距离顶部的位置，可以根据需要调整 */
+  left: 0px; /* 距离左侧的位置，可以根据需要调整 */
+  background: #6c5ce7;
+  color: #f1f5f9;
+  padding: 10px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  min-width: 30px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* 标题文字样式 - 修改为固定大小和滚动 */
+.header-text {
+  flex: 1;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 200;
+  width: 300px; /* 固定宽度 */
+  height: 45px; /* 固定高度 */
+  overflow-y: auto; /* 垂直滚动 */
+  overflow-x: hidden; /* 禁止水平滚动 */
+  padding: 0px;
+  box-sizing: border-box;
+  margin-left: 40px; /* 为绝对定位的marker留出空间 */
+
+}
+
+/* 确保ReactMarkdown在标题中正常显示 */
+.header-text p {
+  margin: 0;
+  color: #475569;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .center-header-transparent {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .header-text {
+    font-size: 14px;
+  }
+}
+
+
+
+/* 中间容器的对话框样式 - 与底部对话框完全一致 */
+.center-chat-section {
+  position: fixed;
+  flex-shrink: 0;
+  height: 0%; /* 从15%增加到20% */
+  width: 40%;
+  top: 87%; /* 距离顶部20px */
+  left: 30%; 
+  padding: 0px;
+  border-top: none;
+  background: #f1f5f9;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* 中间对话输入区域容器美化 - 与原样式完全一致 */
+.center-chat-input-area {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+  background: #ffffff;
+  padding: 5px 5px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 0px solid #e2e8f0; /* 从1px改为0.5px，使边框更细 */
+  transition: all 0.3s ease;
+  margin-top: 50px; /* 添加顶部边距，使对话框位置下移 */
+}
+
+.center-chat-input-area:hover {
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12), 0 3px 12px rgba(0, 0, 0, 0.06); /* 悬停时增强阴影 */
+  border-color: #cbd5e1;
+}
+
+/* 中间对话输入框美化 - 增加长度和高度，与原样式完全一致 */
+.center-chat-input {
+  flex: 1;
+  padding: 15px 20px;
+  border: 0.5px solid #e2e8f0; /* 从1px改为0.5px，使边框更细 */
+  border-radius: 15px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  background: #f8fafc;
+  color: #475569;
+  min-height: 50px;
+  resize: none;
+}
+
+.center-chat-input:focus {
+  border-color: #8b5cf6; /* 聚焦时紫色边框 */
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1); /* 从3px改为2px，使聚焦边框更细 */
+  transform: translateY(-1px);
+}
+
+.center-chat-input::placeholder {
+  color: #94a3b8;
+  font-style: italic;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0.7;
+}
+
+/* 中间对话框禁用状态样式 */
+.center-chat-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+}
+
+/* 响应式调整 - 移动端样式 */
+@media (max-width: 768px) {
+  .center-chat-section {
+    height: 25%; /* 移动端增加更多高度 */
+    padding: 15px;
+  }
+  
+  .center-chat-input {
+    padding: 12px 15px;
+    font-size: 14px;
+    min-height: 45px;
+  }
+}
+
+
+/* 中间对话框发送按钮样式 - 与原发送按钮完全一致 */
+.center-send-btn {
+  padding: 15px 25px; /* 增加按钮尺寸 */
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed); /* 渐变背景 */
+  color: #ffffff;
+  border: none;
+  border-radius: 15px; /* 增加圆角 */
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3); /* 添加阴影 */
+  position: relative;
+  overflow: hidden;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 中间发送按钮悬停效果 */
+.center-send-btn:hover {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9); /* 悬停时加深 */
+  transform: translateY(-2px) scale(1.05); /* 上移并轻微放大 */
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4), 0 4px 12px rgba(139, 92, 246, 0.2); /* 增强阴影 */
+}
+
+/* 中间发送按钮点击效果 */
+.center-send-btn:active {
+  transform: translateY(0) scale(0.98); /* 点击时轻微缩小 */
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+/* 中间发送按钮反光动效 */
+.center-send-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+  z-index: 1;
+}
+
+.center-send-btn:hover::before {
+  left: 100%; /* 悬停时反光从左到右划过 */
+}
+
+/* 确保按钮文字在反光之上 */
+.center-send-btn span {
+  position: relative;
+  z-index: 2;
+}
+
+/* 中间发送按钮加载状态 */
+.center-send-btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.center-send-btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 中间发送按钮禁用状态 */
+.center-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 响应式调整 - 移动端样式 */
+@media (max-width: 768px) {
+  .center-send-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    min-width: 70px;
+  }
+}
+
+.next-btn:hover {
+  transform: translateY(-3px); /* 增加悬停效果 */
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5); /* 增强阴影 */
+}
+
+.finish-btn {
+  background: linear-gradient(135deg, #46e28a 0%, #31b68a 100%);
+  transition: all 0.3s ease;
+}
+
+.finish-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5);
+}
+
+.confirm-finish-btn {
+  background: linear-gradient(135deg, #1e7e34 0%, #19692c 100%);
+  transition: all 0.3s ease;
+}
+
+.confirm-finish-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(30, 126, 52, 0.6);
+}
+
+
+.shine-effect {
+  animation: shine 0.7s ease-out;
+}
+
+@keyframes shine {
+  0% {
+    box-shadow: 0 8px 25px rgba(30, 126, 52, 0.6);
+  }
+  50% {
+    box-shadow: 0 8px 45px rgba(46, 198, 92, 0.8);
+  }
+  100% {
+    box-shadow: 0 8px 25px rgba(30, 126, 52, 0.6);
+  }
+}
+
+
+/* 禁用状态的按钮样式 */
+.nav-btn:disabled,
+.send-btn:disabled,
+.confirm-btn:disabled,
+.next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none !important; /* 禁用悬停变换效果 */
+  box-shadow: none !important; /* 禁用悬停阴影效果 */
+}
+
+.chat-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+}

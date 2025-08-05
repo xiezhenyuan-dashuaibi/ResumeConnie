@@ -1,0 +1,498 @@
+.container {
+  height: 100vh; /* 修改：固定为视口高度，不使用min-height */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden; /* 新增：防止页面滚动 */
+  box-sizing: border-box; /* 新增：确保padding包含在高度内 */
+}
+
+.mainContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  height: calc(100vh - 40px); /* 修改：固定高度，减去container的padding */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 30px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box; /* 新增：确保padding包含在高度内 */
+  overflow: hidden; /* 新增：防止容器滚动 */
+}
+
+/* 上方容器 */
+.topContainer {
+  flex: 2;
+  display: flex;
+  gap: 20px;
+  height: 0; /* 新增：配合flex使用，确保高度由flex控制 */
+  min-height: 0; /* 新增：允许flex子项收缩 */
+}
+
+.leftSection, .rightSection {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  height: 100%; /* 保持：确保子容器占满父容器高度 */
+  overflow: hidden; /* 保持：防止容器本身溢出 */
+  box-sizing: border-box; /* 新增：确保padding包含在高度内 */
+  min-height: 0; /* 新增：允许flex子项收缩 */
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.copyBtn {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.copyBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.copyBtn.success {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.scrollableContent {
+  flex: 1;
+  overflow-y: auto; /* 保持：垂直滚动 */
+  overflow-x: hidden; /* 新增：禁止水平滚动 */
+  padding-right: 10px;
+  min-height: 0; /* 新增：允许flex子项收缩 */
+  word-wrap: break-word; /* 新增：防止内容水平溢出 */
+}
+
+.scrollableContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollableContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.scrollableContent::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 3px;
+}
+
+.block {
+  margin-bottom: 25px;
+}
+
+.blockHeader {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.blockCopyBtn {
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.block:hover .blockCopyBtn {
+  opacity: 1;
+}
+
+.blockCopyBtn:hover {
+  background: #f0f0f0;
+}
+.blockNumber {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.blockContent {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  line-height: 1.6;
+  color: #333;
+  border-left: 4px solid #667eea;
+  white-space: pre-wrap;
+  word-wrap: break-word; /* 新增：防止内容水平溢出 */
+  overflow-wrap: break-word; /* 新增：强制换行 */
+}
+
+.blockSeparator {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #ddd 50%, transparent 100%);
+  margin: 20px 0;
+}
+
+.aiCommentsContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  min-height: 0;
+  word-wrap: break-word; /* 强制长单词换行 */
+  overflow-wrap: break-word; /* 现代浏览器的换行属性 */
+  hyphens: auto; /* 自动连字符换行 */
+  white-space: normal; /* 确保正常的空白符处理 */
+}
+
+.aiCommentsContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.aiCommentsContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.aiCommentsContent::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 3px;
+}
+
+/* 完善的Markdown样式优化 */
+.aiCommentsContent :global(*) {
+  max-width: 100%; /* 确保所有元素不超出容器宽度 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.aiCommentsContent :global(h1),
+.aiCommentsContent :global(h2),
+.aiCommentsContent :global(h3) {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 15px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.aiCommentsContent :global(h1) {
+  font-size: 1.8rem;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 10px;
+}
+
+.aiCommentsContent :global(h2) {
+  font-size: 1.4rem;
+  color: #667eea;
+}
+
+.aiCommentsContent :global(h3) {
+  font-size: 1.2rem;
+  color: #764ba2;
+}
+
+.aiCommentsContent :global(p) {
+  line-height: 1.7;
+  margin-bottom: 15px;
+  color: #444;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap; /* 保持换行符和空格 */
+}
+
+.aiCommentsContent :global(ul),
+.aiCommentsContent :global(ol) {
+  padding-left: 25px;
+  margin-bottom: 15px;
+  word-wrap: break-word;
+}
+
+.aiCommentsContent :global(li) {
+  margin-bottom: 8px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.aiCommentsContent :global(strong) {
+  color: #333;
+  font-weight: 600;
+  word-wrap: break-word;
+}
+
+.aiCommentsContent :global(em) {
+  font-style: italic;
+  color: #555;
+}
+
+.aiCommentsContent :global(code) {
+  background: #f4f4f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #d63384;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.aiCommentsContent :global(pre) {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 15px;
+  border: 1px solid #e9ecef;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.aiCommentsContent :global(pre code) {
+  background: transparent;
+  padding: 0;
+  color: #333;
+  white-space: pre-wrap;
+}
+
+.aiCommentsContent :global(blockquote) {
+  border-left: 4px solid #667eea;
+  margin: 20px 0;
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.aiCommentsContent :global(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.aiCommentsContent :global(th),
+.aiCommentsContent :global(td) {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.aiCommentsContent :global(th) {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.aiCommentsContent :global(a) {
+  color: #667eea;
+  text-decoration: none;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.aiCommentsContent :global(a:hover) {
+  text-decoration: underline;
+}
+
+.aiCommentsContent :global(hr) {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #ddd 50%, transparent 100%);
+  margin: 20px 0;
+}
+
+/* 确保图片不超出容器 */
+.aiCommentsContent :global(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .mainContainer {
+    padding: 20px;
+  }
+  
+  .topContainer {
+    flex-direction: column;
+    height: auto; /* 在小屏幕上允许自动高度 */
+  }
+  
+  .leftSection, .rightSection {
+    min-height: 200px; /* 修改：减少最小高度 */
+    height: auto; /* 在小屏幕上允许自动高度 */
+  }
+  
+  .bottomContainer {
+    height: auto; /* 在小屏幕上允许自动高度 */
+  }
+  
+  .bottomLeft, .bottomRight {
+    height: auto; /* 在小屏幕上允许自动高度 */
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+    height: 100vh; /* 保持：移动设备上也固定高度 */
+  }
+  
+  .mainContainer {
+    padding: 15px;
+    height: calc(100vh - 20px); /* 修改：适应移动设备padding */
+  }
+  
+  .topContainer {
+    height: auto; /* 在移动设备上允许自动高度 */
+  }
+  
+  .bottomContainer {
+    flex-direction: column;
+    height: auto; /* 在移动设备上允许自动高度 */
+  }
+  
+  .leftSection, .rightSection,
+  .bottomLeft, .bottomRight {
+    height: auto; /* 在移动设备上允许自动高度 */
+    min-height: 150px; /* 新增：移动设备上的最小高度 */
+  }
+}
+
+
+/* 在文件中添加底部容器的基础样式 */
+
+/* 底部容器 */
+.bottomContainer {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+  min-height: 200px; /* 确保底部容器有最小高度 */
+  height: auto; /* 允许自动调整高度 */
+}
+
+.bottomLeft, .bottomRight {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-sizing: border-box;
+  min-height: 200px; /* 确保子容器有最小高度 */
+}
+
+.fixedText {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.fixedText h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.fixedText p {
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.imagePlaceholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border: 2px dashed #ddd;
+  border-radius: 10px;
+  min-height: 150px;
+}
+
+.placeholderText {
+  color: #999;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/* 新增：返回首页按钮容器样式 */
+.homeButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0px;
+}
+
+/* 新增：返回首页按钮样式 */
+.homeButton {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.homeButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6b5b95 100%);
+}
+
+.homeButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
