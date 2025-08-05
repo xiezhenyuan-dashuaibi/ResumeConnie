@@ -31,7 +31,12 @@ app = FastAPI(
 # 一体化部署的CORS配置
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],  # 只允许本服务
+    allow_origins=[
+        "http://localhost:8000", 
+        "http://127.0.0.1:8000",
+        "https://*.railway.app",  # 添加Railway域名支持
+        "*"  # 临时允许所有域名，部署后可以限制
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
