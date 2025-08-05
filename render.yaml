@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: resume-analyzer
+    env: python
+    buildCommand: |
+      cd my-resume-analyzer-frontend && 
+      npm install && 
+      npm run build && 
+      cd ..
+    startCommand: python app.py
+    envVars:
+      - key: PORT
+        value: 10000

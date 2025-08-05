@@ -29,13 +29,14 @@ app = FastAPI(
 )
 
 # 一体化部署的CORS配置
+# 更新 CORS 配置以支持 Render
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:8000", 
         "http://127.0.0.1:8000",
-        "https://*.railway.app",  # 添加Railway域名支持
-        "*"  # 临时允许所有域名，部署后可以限制
+        "https://*.onrender.com",  # 添加 Render 域名支持
+        "*"  # 临时允许所有域名
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -550,8 +551,10 @@ if os.path.exists("my-resume-analyzer-frontend/dist"):
     async def serve_index():
         return FileResponse("my-resume-analyzer-frontend/dist/index.html")
 
+# 在文件末尾的 if __name__ == "__main__": 部分
 if __name__ == "__main__":
     import uvicorn
+    # Render 使用 PORT 环境变量
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
 
